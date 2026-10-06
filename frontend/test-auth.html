@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JWT Test</title>
+</head>
+
+<body>
+
+    <h1>JWT Authentication Test</h1>
+
+    <button id="testButton">
+        Test Authentication
+    </button>
+
+    <pre id="result"></pre>
+
+    <script>
+
+        document.getElementById("testButton")
+            .addEventListener("click", async function () {
+
+                const token =
+                    localStorage.getItem("authToken");
+
+                if (!token) {
+
+                    document.getElementById("result")
+                        .textContent =
+                        "No JWT token found. Please login first.";
+
+                    return;
+                }
+
+                try {
+
+                    const response = await fetch(
+                        "../api/test-auth.php",
+                        {
+                            method: "GET",
+
+                            headers: {
+                                "Authorization":
+                                    "Bearer " + token
+                            }
+                        }
+                    );
+
+                    const result =
+                        await response.json();
+
+                    document.getElementById("result")
+                        .textContent =
+                        JSON.stringify(
+                            result,
+                            null,
+                            4
+                        );
+
+                } catch (error) {
+
+                    document.getElementById("result")
+                        .textContent =
+                        "Request failed.";
+
+                    console.error(error);
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html>
